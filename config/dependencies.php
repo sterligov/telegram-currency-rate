@@ -1,7 +1,7 @@
 <?php
 
-use App\BotCommand\CurrencyParser;
 use App\TelegramRequest;
+use App\TelegramRequestInterface;
 use Longman\TelegramBot\Telegram;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
@@ -40,6 +40,8 @@ return [
 
     CacheItemPoolInterface::class => \Di\Create(FilesystemAdapter::class),
 
+    TelegramRequestInterface::class => \Di\Create(TelegramRequest::class),
+
     'currencyChart' => \Di\autowire(CurrencyChartEvent::class),
 
     DynamicChart::class => Di\Create(DynamicChart::class)
@@ -51,7 +53,7 @@ return [
 
     CurrencyCommand::class => Di\Create(CurrencyCommand::class)
         ->constructor(
-            \Di\get(TelegramRequest::class),
+            \Di\get(TelegramRequestInterface::class),
             \Di\get(\App\Currency\PipelineConverter::class),
             \Di\get(CacheItemPoolInterface::class)
         ),
