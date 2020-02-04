@@ -1,0 +1,22 @@
+os: linux
+language: php
+php:
+  - 7.4
+addons:
+  ssh_known_hosts:
+    secure: DiA7G9L4mLlwQNWQvSoAXcqWOrR82dYTX6XlWIwyzU0oaN/iJX+BhP0G/gQx+N0yiN4aOJWeHoRH1bUk2LZMMQZREQOHGb1yL7m+g91a7fWQkoz5RmQb2IeV152ZxvFOtCnWkmwh76c5kaYGYr/Z0UXn5VtX7Ul5e9qlxrMV0V7gGlDNvsoH2jRKF/dcUDCSp59cTWgdarv/gSvT9LL64OGwwQ+63vIC4JtU79KE/1qihI8HXaokHVy0pYHO384z7csGD2s+u2RKmma7a1QZ8Lp0Vh9Bg2UWqQfYmPTsIhvvlRYZaJJtyZJYIQJQ6cj6CEXBEu5Wne4OKxUsSAHKjnVvgXv8A+TdOAtc0aNiQ1RZKsepB4O6ef3OsrH1LMKD8tV8ZtHrXGid+5ztTgh0Rjn/hkPkzAf/Ce5Knb3UnhQj3v+00WT92Mmilp89yUkGO9G79etiGH5psJR5hT29WXY1DoyaDb8pYgd9PRyGb2iJgRd845NdgoF65EX8cAGNJt/QsoKP93Yf342jeHPX927ic5cuexZZvtiTy7JO6xKRIUHNz1mF1PKg6rYsgKea2NZiPq01oXhEWjDNr+HT/phKPRgPUp60IBc28zzOpcSubzv/CeD1X2slK7BGIYzqbjwJ2kPci8pp7vUqgx+ws9jZpbLSnDMdIDHp9yF6pfg=
+before_install:
+  - openssl aes-256-cbc -K $encrypted_e60fa7ed95bb_key -iv $encrypted_e60fa7ed95bb_iv
+    -in .travis/deploy_rsa.enc -out .travis/deploy_rsa -d
+  - eval "$(ssh-agent -s)"
+  - cp .travis/deploy_rsa ~/.ssh/id_rsa
+  - chmod 600 ~/.ssh/id_rsa
+  - ssh-add ~/.ssh/id_rsa
+deploy:
+- provider: script
+  cleanup: true
+  script: bash .travis/deploy.sh
+  on:
+    branch: master
+before_script:
+  - composer install

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<ValCurs Date="24.10.2019" name="Foreign Currency Market">
+    <Valute ID="R01010">
+        <NumCode>840</NumCode>
+        <CharCode>USD</CharCode>
+        <Nominal>1</Nominal>
+        <Name>USA Dollar</Name>
+        <Value>400</Value>
+    </Valute>
+    <Valute ID="R01020A">
+        <NumCode>978</NumCode>
+        <CharCode>EUR</CharCode>
+        <Nominal>1</Nominal>
+        <Name>EURO</Name>
+        <Value>500</Value>
+    </Valute>
+    <Valute ID="R01020A">
+        <NumCode>398</NumCode>
+        <CharCode>KZT</CharCode>
+        <Nominal>100</Nominal>
+        <Name>Kazakhstan</Name>
+        <Value>800</Value>
+    </Valute>
+</ValCurs>
