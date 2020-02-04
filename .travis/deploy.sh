@@ -13,4 +13,5 @@ ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${USER}@${HOST} 
     echo TG_WEBHOOK=${TG_WEBHOOK} >> .env && \
     echo TG_TOKEN=${TG_TOKEN} >> .env && \
     echo TG_BOT_NAME=${TG_BOT_NAME} >> .env && \
-    docker-compose up -d --build"
+    docker-compose up -d --build && \
+    docker exec -it php composer install"
