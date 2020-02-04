@@ -13,12 +13,10 @@ before_install:
   - chmod 600 ~/.ssh/id_rsa
   - ssh-add ~/.ssh/id_rsa
 deploy:
-- provider: script
+  provider: script
   cleanup: true
   script: bash .travis/deploy.sh
   on:
     branch: master
 before_script:
   - composer install
-
-
