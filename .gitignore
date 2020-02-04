@@ -4,7 +4,3 @@ vendor/
 .env
 .docker/nginx/log
 .phpunit.result.cache
-files/*
-!files/.gitingnore
-log/*
-!log/.gitignore
