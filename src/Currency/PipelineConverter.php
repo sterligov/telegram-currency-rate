@@ -18,20 +18,16 @@ class PipelineConverter implements ConverterInterface
 
     /**
      * PipelineConverter constructor.
+     * @param array $pipeline
      */
-    public function __construct()
+    public function __construct(array $pipeline = [])
     {
-        $this->pipeline = [
-            Container::get(RussianCentralBank::class),
-            Container::get(EuropeanCentralBank::class)
-        ];
-    }
-
-    /**
-     * @param ConverterInterface[] $pipeline
-     */
-    public function setPipeline(array $pipeline)
-    {
+        if (!$pipeline) {
+            $pipeline = [
+                Container::get(RussianCentralBank::class),
+                Container::get(EuropeanCentralBank::class)
+            ];
+        }
         $this->pipeline = $pipeline;
     }
 
