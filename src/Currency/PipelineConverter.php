@@ -12,22 +12,15 @@ use Psr\Cache\CacheItemPoolInterface;
 class PipelineConverter implements ConverterInterface
 {
     /**
-     * @var CacheItemPoolInterface
-     */
-    private CacheItemPoolInterface $cache;
-
-    /**
      * @var ConverterInterface[]
      */
     private array $pipeline = [];
 
     /**
      * PipelineConverter constructor.
-     * @param CacheItemPoolInterface $cache
      */
-    public function __construct(CacheItemPoolInterface $cache)
+    public function __construct()
     {
-        $this->cache = $cache;
         $this->pipeline = [
             Container::get(RussianCentralBank::class),
             Container::get(EuropeanCentralBank::class)
