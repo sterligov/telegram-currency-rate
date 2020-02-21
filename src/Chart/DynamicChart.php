@@ -9,7 +9,7 @@ use \SVG\Nodes\Shapes\SVGPolyline;
 
 class DynamicChart
 {
-    const BORDER_OFFSET = 75;
+    const BORDER_OFFSET = 100;
 
     const Y_NUM_MARKUP = 10;
 
