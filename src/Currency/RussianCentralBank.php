@@ -62,21 +62,23 @@ class RussianCentralBank extends AbstractConverter implements PeriodCurrencyRate
 
         $fromValues = [];
         $toValues = [];
+        $startDates = [];
+        $endDates = [];
 
         if ($fromCurrency) {
             $url = "http://www.cbr.ru/scripts/XML_dynamic.asp?date_req1=$startDate&date_req2=$endDate&VAL_NM_RQ=$fromCurrency";
             $response = $this->client->get($url);
-            list($startDates, $fromValues) = $this->parseCurrencyPeriodXML($response->getBody()->getContents());
+            [$startDates, $fromValues] = $this->parseCurrencyPeriodXML($response->getBody()->getContents());
         }
 
         if ($toCurrency) {
             $url = "http://www.cbr.ru/scripts/XML_dynamic.asp?date_req1=$startDate&date_req2=$endDate&VAL_NM_RQ=$toCurrency";
             $response = $this->client->get($url);
-            list($endDates, $toValues) = $this->parseCurrencyPeriodXML($response->getBody()->getContents());
+            [$endDates, $toValues] = $this->parseCurrencyPeriodXML($response->getBody()->getContents());
         }
 
         $values = [];
-        $nValue = count($fromValues);
+        $nValue = max(count($fromValues), count($toValues));
 
         for ($i = 0; $i < $nValue; $i++) {
             $values[] = $this->convertWithBaseCurrency(
@@ -88,7 +90,7 @@ class RussianCentralBank extends AbstractConverter implements PeriodCurrencyRate
             );
         }
 
-        return $this->fillEmptyDates($startDates ?? $endDates, $values);
+        return $this->fillEmptyDates($startDates ?: $endDates, $values);
     }
 
     /**
