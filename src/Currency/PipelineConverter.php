@@ -40,20 +40,14 @@ class PipelineConverter implements ConverterInterface
      */
     public function convert(Currency $from, Currency $to, $amount = 1)
     {
-        $rate = 0;
         foreach ($this->pipeline as $converter) {
             try {
-                $rate = $converter->convert($from, $to);
-                break;
+                return $amount * $converter->convert($from, $to);
             } catch (\Exception $e) {
                 TelegramLog::debug($e->getMessage());
             }
         }
 
-        if (!$rate) {
-            throw new CurrencyConverterException('Cannot get result from external currency api');
-        }
-
-        return $amount * $rate;
+        throw new CurrencyConverterException('Cannot get result from external currency api');
     }
 }
