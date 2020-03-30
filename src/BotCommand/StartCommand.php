@@ -11,7 +11,6 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 
 
 use App\Currency\Currency;
-use App\Currency\Currency;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
 
