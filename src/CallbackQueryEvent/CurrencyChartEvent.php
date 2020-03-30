@@ -6,6 +6,7 @@ namespace App\CallbackQueryEvent;
 
 use App\Chart\PeriodCurrencyChart;
 use App\Chart\SvgConverterInterface;
+use App\Currency\Currency;
 use App\TelegramRequestInterface;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\TelegramLog;
@@ -71,7 +72,7 @@ class CurrencyChartEvent implements EventInterface
             $image = $this->getImageName($data[0], $data[1], $data[2], $data[3]);
 
             if (!$this->filesystem->exists("$image.png")) {
-                $svg = $this->chart->draw($data[0], $data[1], $dates);
+                $svg = $this->chart->draw(new Currency($data[0]), new Currency($data[1]), $dates);
                 $this->svgConverter->convert($image, $svg->toXMLString(), 'png');
             }
         } catch (\Exception $e) {

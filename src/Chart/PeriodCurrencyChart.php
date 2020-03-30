@@ -4,6 +4,7 @@
 namespace App\Chart;
 
 
+use App\Currency\Currency;
 use App\Currency\PeriodCurrencyRateInterface;
 
 class PeriodCurrencyChart
@@ -32,17 +33,17 @@ class PeriodCurrencyChart
     }
 
     /**
-     * @param $fromCurrency
-     * @param $toCurrency
+     * @param Currency|null $from
+     * @param Currency|null $to
      * @param array $dates
      * @return array|\SVG\SVG
      * @throws \App\Exception\CoordinatePlaneException
      */
-    public function draw($fromCurrency, $toCurrency, array $dates)
+    public function draw(?Currency $from, ?Currency $to, array $dates)
     {
         [, $values] = $this->currencyConverter->periodCurrencyRate(
-            $fromCurrency,
-            $toCurrency,
+            $from,
+            $to,
             $dates[0],
             $dates[count($dates) - 1]
         );
