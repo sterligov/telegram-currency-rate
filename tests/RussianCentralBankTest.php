@@ -3,6 +3,9 @@
 namespace App\Tests;
 
 
+use App\Currency\Currency;
+use App\Exception\CurrencyCommandException;
+use App\Exception\CurrencyConverterException;
 use \PHPUnit\Framework\TestCase;
 
 class RussianCentralBankTest extends TestCase
@@ -56,16 +59,30 @@ class RussianCentralBankTest extends TestCase
      * @param $from
      * @param $to
      * @param $expected
+     * @throws \App\Exception\CurrencyConverterException
      */
     public function testConvert($from, $to, $expected)
     {
-        $this->assertEquals($expected, $this->converter->convert($from, $to));
+        $this->assertEquals($expected, $this->converter->convert(new Currency($from), new Currency($to)));
     }
 
-    public function testConvertExceptions()
+    public function invalidData()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        return [
+            [-1, 840],
+            ['USD', 1],
+            [-1, 'BAD_CURRENCY'],
+        ];
+    }
 
-        $this->converter->convert(-1, 10);
+    /**
+     * @dataProvider invalidData
+     * @throws CurrencyConverterException
+     */
+    public function testConvertExceptions($from, $to)
+    {
+        $this->expectException(CurrencyConverterException::class);
+
+        $this->converter->convert(new Currency($from), new Currency($to));
     }
 }

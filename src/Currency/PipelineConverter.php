@@ -32,13 +32,13 @@ class PipelineConverter implements ConverterInterface
     }
 
     /**
-     * @param $from
-     * @param $to
+     * @param Currency $from
+     * @param Currency $to
      * @param int $amount
      * @return float|int|mixed
      * @throws CurrencyConverterException
      */
-    public function convert($from, $to, $amount = 1)
+    public function convert(Currency $from, Currency $to, $amount = 1)
     {
         $rate = 0;
         foreach ($this->pipeline as $converter) {

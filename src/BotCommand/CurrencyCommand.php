@@ -4,8 +4,9 @@
 namespace App\BotCommand;
 
 
-use App\Currency\CodeConverter;
 use App\Currency\ConverterInterface;
+use App\Currency\Currency;
+use App\Exception\CurrencyCommandException;
 use App\TelegramRequestInterface;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\TelegramLog;
@@ -79,14 +80,15 @@ class CurrencyCommand implements CommandInterface
     }
 
     /**
-     * @param $from
-     * @param $to
+     * @param Currency $from
+     * @param Currency $to
      * @return mixed
+     * @throws \App\Exception\CurrencyConverterException
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    private function getRate($from, $to)
+    private function getRate(Currency $from, Currency $to)
     {
-        $key = 'currency.' . CodeConverter::toAlpha($from) . '.' . CodeConverter::toAlpha($to);
+        $key = 'currency.' . $from->convertCode(Currency::ALPHA) . '.' . $to->convertCode(Currency::ALPHA);
         $rateCache = $this->cache->getItem($key);
 
         if (!$rateCache->isHit()) {
@@ -109,13 +111,14 @@ class CurrencyCommand implements CommandInterface
     /**
      * @param string $message
      * @return array
+     * @throws CurrencyCommandException
      */
     private function parse(string $message): array
     {
         $message = trim($message);
         $jsonText = trim(json_encode($message), '"');
 
-        if (mb_substr($jsonText, 0, 2) === '\u') {
+        if (mb_substr($jsonText, 0, 2) === '\u') { // flag
             $currency = explode(' ', $jsonText);
 
             if (count($currency) === 1) {
@@ -127,25 +130,29 @@ class CurrencyCommand implements CommandInterface
             $currency = explode(' ', $message, 2);
         }
 
-        return $currency;
+        if (count($currency) < 2) {
+            throw new CurrencyCommandException("Cannot get currency pair $message");
+        }
+
+        return [new Currency($currency[0]), new Currency($currency[1])];
     }
 
     /**
      * @param $chatID
-     * @param $from
-     * @param $to
+     * @param Currency $from
+     * @param Currency $to
      * @return array
      * @throws \Exception
      */
-    private function getInlineKeyboard($chatID, $from, $to)
+    private function getInlineKeyboard($chatID, Currency $from, Currency $to)
     {
-        $from = CodeConverter::toAlpha($from);
-        $to = CodeConverter::toAlpha($to);
+        $fromCode = $from->convertCode(Currency::ALPHA);
+        $toCode = $to->convertCode(Currency::ALPHA);
 
         $callbackData = [
             'currencyChart',
-            $from,
-            $to,
+            $fromCode,
+            $toCode,
             (new \DateTime())->modify('-1 month')->format('Y-m-d'),
             (new \DateTime())->format('Y-m-d'),
             $chatID

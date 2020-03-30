@@ -14,23 +14,24 @@ class EuropeanCentralBank extends AbstractConverter
     const BASE_CURRENCY = 'EUR';
 
     /**
-     * @param $from
-     * @param $to
-     * @param $amount
+     * @param Currency|null $from
+     * @param Currency|null $to
+     * @param float $amount
      * @return float|int|mixed
+     * @throws \App\Exception\CurrencyConverterException
      */
-    public function convert($from, $to, $amount = 1)
+    public function convert(?Currency $from, ?Currency $to, float $amount = 1)
     {
-        $from = CodeConverter::toAlpha($from);
-        $to = CodeConverter::toAlpha($to);
+        $fromCode = $from->convertCode(Currency::ALPHA);
+        $toCode = $to->convertCode(Currency::ALPHA);
 
         $response = $this->client->get('https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml?34686d29f763ea6d2a8a22559b3df675');
         $xml = new \SimpleXMLElement($response->getBody()->getContents());
         $xml->registerXPathNamespace('c', 'http://www.ecb.int/vocabulary/2002-08-01/eurofxref');
 
-        $fromValue = $xml->xpath("//c:Cube[@currency='$from']/@rate")[0] ?? '';
-        $toValue = $xml->xpath("//c:Cube[@currency='$to']/@rate")[0] ?? '';
+        $fromValue = $xml->xpath("//c:Cube[@currency='$fromCode']/@rate")[0] ?? '';
+        $toValue = $xml->xpath("//c:Cube[@currency='$toCode']/@rate")[0] ?? '';
 
-        return $amount * $this->convertWithBaseCurrency($from, $to, self::BASE_CURRENCY, (string)$fromValue, (string)$toValue);
+        return $amount * $this->convertWithBaseCurrency($fromCode, $toCode, self::BASE_CURRENCY, (string)$fromValue, (string)$toValue);
     }
 }

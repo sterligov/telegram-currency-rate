@@ -4,6 +4,7 @@
 namespace App\Tests;
 
 
+use App\Currency\Currency;
 use App\Currency\PipelineConverter;
 use App\Currency\ConverterInterface;
 use App\Exception\CurrencyConverterException;
@@ -29,7 +30,7 @@ class PipelineConverterTest extends TestCase
             $converter2
         ]);
 
-        $this->assertEquals($rate, $pipeline->convert(978, 643));
+        $this->assertEquals($rate, $pipeline->convert(new Currency(978), new Currency(643)));
     }
 
     public function testConverterException()
@@ -43,7 +44,7 @@ class PipelineConverterTest extends TestCase
         $pipeline = new PipelineConverter([$converter]);
 
         $this->expectException(CurrencyConverterException::class);
-        $pipeline->convert(978, 643);
+        $pipeline->convert(new Currency(978), new Currency(643));
 
     }
 }

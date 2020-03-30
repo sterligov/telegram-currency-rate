@@ -56,7 +56,6 @@ class GenericmessageCommand extends SystemCommand
      */
     public function executeNoDb()
     {
-        // Do nothing
         return Request::emptyResponse();
     }
 

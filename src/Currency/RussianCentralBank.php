@@ -16,61 +16,60 @@ class RussianCentralBank extends AbstractConverter implements PeriodCurrencyRate
     const BASE_CURRENCY = 643;
 
     /**
-     * @param $from
-     * @param $to
-     * @param $amount
+     * @param Currency|null $from
+     * @param Currency|null $to
+     * @param float $amount
      * @return float|int|mixed
-     * @throws \InvalidArgumentException
+     * @throws \App\Exception\CurrencyConverterException
      */
-    public function convert($from, $to, $amount = 1)
+    public function convert(?Currency $from, ?Currency $to, float $amount = 1)
     {
-        $from = CodeConverter::toNum($from);
-        $to = CodeConverter::toNum($to);
+        $fromCode = $from->convertCode(Currency::NUMBER);
+        $toCode = $to->convertCode(Currency::NUMBER);
 
         $response = $this->client->get('http://www.cbr.ru/scripts/XML_daily_eng.asp');
         $xml = new \SimpleXMLElement($response->getBody()->getContents());
 
-        $fromValue = $xml->xpath("//Valute[NumCode=$from]")[0] ?? '';
-
+        $fromValue = $xml->xpath("//Valute[NumCode=$fromCode]")[0] ?? '';
         if ($fromValue) {
             $val = str_replace(',', '.', (string)$fromValue->Value);
             $fromValue = 1 / ($val / (int)$fromValue->Nominal);
         }
 
-        $toValue = $xml->xpath("//Valute[NumCode=$to]")[0] ?? '';
-
+        $toValue = $xml->xpath("//Valute[NumCode=$toCode]")[0] ?? '';
         if ($toValue) {
             $val = str_replace(',', '.', (string)$toValue->Value);
             $toValue = 1 / ($val / (int)$toValue->Nominal);
         }
 
-        return $amount * $this->convertWithBaseCurrency($from, $to, self::BASE_CURRENCY, $fromValue, $toValue);
+        return $amount * $this->convertWithBaseCurrency($fromCode, $toCode, self::BASE_CURRENCY, $fromValue, $toValue);
     }
 
     /**
-     * @param $fromCurrency
-     * @param $toCurrency
-     * @param $startDate
-     * @param $endDate
+     * @param Currency|null $from
+     * @param Currency|null $to
+     * @param string $startDate
+     * @param string $endDate
      * @return array
      * @throws \Exception
      */
-    public function periodCurrencyRate($fromCurrency, $toCurrency, $startDate, $endDate): array
+    public function periodCurrencyRate(?Currency $from, ?Currency $to, string $startDate, string $endDate): array
     {
-        $fromCurrency = CodeConverter::convert($fromCurrency, 'custom_id');
-        $toCurrency = CodeConverter::convert($toCurrency, 'custom_id');
-
         $fromValues = [];
         $toValues = [];
+        $fromCode = '';
+        $toCode = '';
 
-        if ($fromCurrency) {
-            $url = "http://www.cbr.ru/scripts/XML_dynamic.asp?date_req1=$startDate&date_req2=$endDate&VAL_NM_RQ=$fromCurrency";
+        if ($from) {
+            $fromCode = $from->convertCode(Currency::RUSSIAN_BANK_ID);
+            $url = "http://www.cbr.ru/scripts/XML_dynamic.asp?date_req1=$startDate&date_req2=$endDate&VAL_NM_RQ=$fromCode";
             $response = $this->client->get($url);
             list($startDates, $fromValues) = $this->parseCurrencyPeriodXML($response->getBody()->getContents());
         }
 
-        if ($toCurrency) {
-            $url = "http://www.cbr.ru/scripts/XML_dynamic.asp?date_req1=$startDate&date_req2=$endDate&VAL_NM_RQ=$toCurrency";
+        if ($to) {
+            $toCode = $to->convertCode(Currency::RUSSIAN_BANK_ID);
+            $url = "http://www.cbr.ru/scripts/XML_dynamic.asp?date_req1=$startDate&date_req2=$endDate&VAL_NM_RQ=$toCode";
             $response = $this->client->get($url);
             list($endDates, $toValues) = $this->parseCurrencyPeriodXML($response->getBody()->getContents());
         }
@@ -80,8 +79,8 @@ class RussianCentralBank extends AbstractConverter implements PeriodCurrencyRate
 
         for ($i = 0; $i < $nValue; $i++) {
             $values[] = $this->convertWithBaseCurrency(
-                $fromCurrency,
-                $toCurrency,
+                $fromCode,
+                $toCode,
                 'R00001',
                 $fromValues[$i] ?? '',
                 $toValues[$i] ?? ''
@@ -92,12 +91,12 @@ class RussianCentralBank extends AbstractConverter implements PeriodCurrencyRate
     }
 
     /**
-     * @param $dates
-     * @param $values
+     * @param array $dates
+     * @param array $values
      * @return array
      * @throws \Exception
      */
-    private function fillEmptyDates($dates, $values)
+    private function fillEmptyDates(array $dates, array $values)
     {
         $fullDates[] = $dates[0];
         $fullValues[] = $values[0];
@@ -120,10 +119,10 @@ class RussianCentralBank extends AbstractConverter implements PeriodCurrencyRate
     }
 
     /**
-     * @param $xmlString
+     * @param string $xmlString
      * @return array
      */
-    private function parseCurrencyPeriodXML($xmlString)
+    private function parseCurrencyPeriodXML(string $xmlString)
     {
         $xml = new \SimpleXMLElement($xmlString);
         $dates = [];

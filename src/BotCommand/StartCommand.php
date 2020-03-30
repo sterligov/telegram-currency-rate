@@ -10,7 +10,8 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 
-use App\Currency\CodeConverter;
+use App\Currency\Currency;
+use App\Currency\Currency;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
 
@@ -59,17 +60,17 @@ For example to convert US Dollar to EURO send message with one of these content:
 EOD;
 
         $pairs = [
-            [CodeConverter::CURRENCY['USD'], CodeConverter::CURRENCY['RUB']],
-            [CodeConverter::CURRENCY['EUR'], CodeConverter::CURRENCY['RUB']],
-            [CodeConverter::CURRENCY['USD'], CodeConverter::CURRENCY['UZS']],
-            [CodeConverter::CURRENCY['RUB'], CodeConverter::CURRENCY['UZS']],
-            [CodeConverter::CURRENCY['EUR'], CodeConverter::CURRENCY['USD']],
-            [CodeConverter::CURRENCY['USD'], CodeConverter::CURRENCY['UAH']],
-            [CodeConverter::CURRENCY['UAH'], CodeConverter::CURRENCY['RUB']],
-            [CodeConverter::CURRENCY['USD'], CodeConverter::CURRENCY['KZT']],
-            [CodeConverter::CURRENCY['RUB'], CodeConverter::CURRENCY['KZT']],
-            [CodeConverter::CURRENCY['USD'], CodeConverter::CURRENCY['BYN']],
-            [CodeConverter::CURRENCY['BYN'], CodeConverter::CURRENCY['RUB']],
+            [Currency::CURRENCY['USD'], Currency::CURRENCY['RUB']],
+            [Currency::CURRENCY['EUR'], Currency::CURRENCY['RUB']],
+            [Currency::CURRENCY['USD'], Currency::CURRENCY['UZS']],
+            [Currency::CURRENCY['RUB'], Currency::CURRENCY['UZS']],
+            [Currency::CURRENCY['EUR'], Currency::CURRENCY['USD']],
+            [Currency::CURRENCY['USD'], Currency::CURRENCY['UAH']],
+            [Currency::CURRENCY['UAH'], Currency::CURRENCY['RUB']],
+            [Currency::CURRENCY['USD'], Currency::CURRENCY['KZT']],
+            [Currency::CURRENCY['RUB'], Currency::CURRENCY['KZT']],
+            [Currency::CURRENCY['USD'], Currency::CURRENCY['BYN']],
+            [Currency::CURRENCY['BYN'], Currency::CURRENCY['RUB']],
         ];
         $keyboard = [];
 

@@ -1,9 +1,12 @@
 <?php
 
+
 namespace App\Currency;
 
 
-class CodeConverter
+use App\Exception\CurrencyConverterException;
+
+class Currency
 {
     const CURRENCY = [
         'RUB' => [
@@ -64,45 +67,67 @@ class CodeConverter
         ],
     ];
 
+    const ALPHA = 'alpha';
+
+    const NUMBER = 'num';
+
+    const RUSSIAN_BANK_ID = 'custom_id';
+
     /**
-     * @param $currency
-     * @return mixed
+     * @var mixed
      */
-    public static function toAlpha($currency)
+    private $currency;
+
+    /**
+     * Currency constructor.
+     * @param $currency
+     */
+    public function __construct($currency)
     {
-        return self::convert($currency, 'alpha');
+        $this->currency = $currency;
     }
 
     /**
      * @param $currency
-     * @return mixed
      */
-    public static function toNum($currency)
+    public function setCurrency($currency)
     {
-        return self::convert($currency, 'num');
+        $this->currency = $currency;
     }
 
     /**
-     * @param $from
+     * @return mixed
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    /**
      * @param $to
-     * @return string
+     * @return mixed
+     * @throws CurrencyConverterException
      */
-    public static function convert($from, $to)
+    public function convertCode($to)
     {
+        $from = $this->currency;
         if (ctype_alpha($from) && in_array(strlen($from), [2, 3])) {
             $from = strtoupper($from);
         }
 
         $formats = array_keys(current(self::CURRENCY));
-
         foreach ($formats as $format) {
             $index = array_search($from, array_column(self::CURRENCY, $format));
-
             if ($index !== false) {
-                return array_values(self::CURRENCY)[$index][$to];
+                $codes = array_values(self::CURRENCY)[$index];
+                if (!isset($codes[$to])) {
+                    throw new CurrencyConverterException("Invalid code $to");
+                }
+
+                return $codes[$to];
             }
         }
 
-        throw new \InvalidArgumentException("Invalid code $from");
+        throw new CurrencyConverterException("Invalid code $from");
     }
 }

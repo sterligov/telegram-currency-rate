@@ -8,8 +8,15 @@ use GuzzleHttp\Client;
 
 abstract class AbstractConverter implements ConverterInterface
 {
+    /**
+     * @var Client
+     */
     protected Client $client;
 
+    /**
+     * AbstractConverter constructor.
+     * @param Client $client
+     */
     public function __construct(Client $client)
     {
         $this->client = $client;

@@ -12,10 +12,10 @@ namespace App\Currency;
 interface ConverterInterface
 {
     /**
-     * @param $from
-     * @param $to
-     * @param $amount
+     * @param Currency $from
+     * @param Currency $to
+     * @param float $amount
      * @return mixed
      */
-    public function convert($from, $to, $amount = 1);
+    public function convert(Currency $from, Currency $to, float $amount = 1.0);
 }
