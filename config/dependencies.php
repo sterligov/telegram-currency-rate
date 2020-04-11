@@ -7,7 +7,7 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use \Psr\Container\ContainerInterface;
-use \Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use \Symfony\Component\Cache\Adapter\RedisAdapter;
 use \Psr\Cache\CacheItemPoolInterface;
 use \App\Chart\DynamicChart;
 use \App\CallbackQueryEvent\CurrencyChartEvent;
@@ -18,27 +18,32 @@ use \App\Currency\RussianCentralBank;
 use \App\Chart\CoordinatePlaneBuilder;
 use \App\BotCommand\CurrencyCommand;
 
-$botConfig = require __DIR__ . '/bot.php';
-
 return [
-    'debugErrorBotLogger' => function(ContainerInterface $c) use ($botConfig) {
-        $debugHandler = new StreamHandler($botConfig['logging']['debug'], Logger::DEBUG);
+    'debugErrorBotLogger' => function(ContainerInterface $c) {
+
+        $debugHandler = new StreamHandler($c->get('log.debug'), Logger::DEBUG);
         $debugHandler->setFormatter(new LineFormatter(null, null, true));
 
-        $errorHandler = new StreamHandler($botConfig['logging']['error'], Logger::ERROR);
+        $errorHandler = new StreamHandler($c->get('log.error'), Logger::ERROR);
         $errorHandler->setFormatter(new LineFormatter(null, null, true));
 
         return new Logger('telegram_bot', [$debugHandler, $errorHandler]);
     },
 
-    'updateBotLogger' => function(ContainerInterface $c) use ($botConfig) {
-        $updateHandler = new StreamHandler($botConfig['logging']['update'], Logger::INFO);
+    'updateBotLogger' => function(ContainerInterface $c) {
+        $updateHandler = new StreamHandler($c->get('log.update'), Logger::INFO);
         $updateHandler->setFormatter(new LineFormatter('%message%' . PHP_EOL));
 
         return new Logger('telegram_bot_updates', [$updateHandler]);
     },
 
-    CacheItemPoolInterface::class => \Di\Create(FilesystemAdapter::class),
+    CacheItemPoolInterface::class => function(ContainerInterface $c) {
+        $host = $_ENV['REDIS_HOST'];
+        $port = $_ENV['REDIS_PORT'];
+        $client = RedisAdapter::createConnection("redis://$host:$port");
+
+        return new RedisAdapter($client);
+    },
 
     TelegramRequestInterface::class => \Di\Create(TelegramRequest::class),
 
@@ -59,7 +64,7 @@ return [
         ),
 
     Telegram::class => DI\create(Telegram::class)
-        ->constructor($botConfig['token'], $botConfig['bot_username'])
-        ->method('addCommandsPaths', $botConfig['commands']['paths']),
+        ->constructor(\Di\env('TG_TOKEN'), $_ENV['TG_BOT_NAME'])
+        ->method('addCommandsPaths', \Di\get('bot.commands')),
 ];
 

@@ -7,6 +7,20 @@ services:
   volumes:
    - ./:/var/www/html/
    - .docker/php:/usr/local/etc/php/custom.d
+# mongo:
+#   image: mongo:4.2
+#   container_name: mongo
+#   restart: always
+#   environment:
+#     - "MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT}"
+#     - "MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASS}"
+#     - "MONGO_INITDB_DATABASE=${MONGO_DB}"
+ redis:
+   container_name: redis
+   image: redis:5.0.8-alpine
+   restart: always
+   expose:
+     - "${REDIS_PORT}"
  nginx-server:
   image: nginx:1.17
   container_name: nginx-server
@@ -18,4 +32,7 @@ services:
     - .docker/nginx/site.conf:/etc/nginx/conf.d/default.conf
   depends_on:
     - php
+
+
+
 

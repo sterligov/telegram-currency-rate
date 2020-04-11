@@ -16,10 +16,13 @@ $dotenv = new Dotenv();
 $dotenv->load(__DIR__ . '/../.env');
 
 $containerBuilder = new \DI\ContainerBuilder();
-$containerBuilder->addDefinitions(__DIR__ . '/../config/dependencies.php');
+$containerBuilder->addDefinitions(
+    __DIR__ . '/../config/config.php',
+    __DIR__ . '/../config/dependencies.php'
+);
 Container::register($containerBuilder->build());
 
-$botConfig = require __DIR__ . '/../config/bot.php';
+$bot = Container::get(\App\Bot::class);
 
 try {
     TelegramLog::initialize(Container::get('debugErrorBotLogger'), Container::get('updateBotLogger'));
@@ -27,7 +30,7 @@ try {
     $bot = Container::get(\App\Bot::class);
 
     if (!empty($_GET['set_webhook'])) {
-        $bot->setWebhook($botConfig['webhook']['url']);
+        $bot->setWebhook($_ENV['TG_WEBHOOK']);
     } else {
         $bot->start();
     }
