@@ -17,6 +17,8 @@ use App\Currency\PeriodCurrencyRateInterface;
 use \App\Currency\RussianCentralBank;
 use \App\Chart\CoordinatePlaneBuilder;
 use \App\BotCommand\CurrencyCommand;
+use \App\Currency\CachingCurrencyConverter;
+use \App\Currency\PipelineConverter;
 
 return [
     'debugErrorBotLogger' => function(ContainerInterface $c) {
@@ -56,10 +58,16 @@ return [
 
     PeriodCurrencyRateInterface::class => \Di\autowire(RussianCentralBank::class),
 
+    CachingCurrencyConverter::class => \Di\Create(CachingCurrencyConverter::class)
+        ->constructor(
+            \Di\get(PipelineConverter::class),
+            \Di\get(CacheItemPoolInterface::class),
+        ),
+
     CurrencyCommand::class => Di\Create(CurrencyCommand::class)
         ->constructor(
             \Di\get(TelegramRequestInterface::class),
-            \Di\get(\App\Currency\PipelineConverter::class),
+            \Di\get(CachingCurrencyConverter::class),
             \Di\get(CacheItemPoolInterface::class)
         ),
 

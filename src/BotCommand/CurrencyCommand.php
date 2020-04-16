@@ -58,7 +58,7 @@ class CurrencyCommand implements CommandInterface
 
             $replyMarkup = [];
             $text = 'No data was found for the specified currency pair';
-            $rate = $this->getRate($fromCurrency, $toCurrency);
+            $rate = $this->converter->convert($fromCurrency, $toCurrency);
 
             if ($rate) {
                 $replyMarkup = $this->getInlineKeyboard($message->getChat()->getId(), $fromCurrency, $toCurrency);
@@ -77,35 +77,6 @@ class CurrencyCommand implements CommandInterface
 
             return $this->request->sendEmpty();
         }
-    }
-
-    /**
-     * @param Currency $from
-     * @param Currency $to
-     * @return mixed
-     * @throws \App\Exception\CurrencyConverterException
-     * @throws \Psr\Cache\InvalidArgumentException
-     */
-    private function getRate(Currency $from, Currency $to)
-    {
-        $key = 'currency.' . $from->convertCode(Currency::ALPHA) . '.' . $to->convertCode(Currency::ALPHA);
-        $rateCache = $this->cache->getItem($key);
-
-        if (!$rateCache->isHit()) {
-            try {
-                $rate = $this->converter->convert($from, $to);
-                $expireDate = (new \DateTime())
-                    ->modify('+1 day')
-                    ->setTime(0, 0, 0);
-                $rateCache->expiresAt($expireDate);
-                $rateCache->set($rate);
-                $this->cache->save($rateCache);
-            } catch (\Exception $e) {
-                TelegramLog::debug($e->getMessage());
-            }
-        }
-
-        return $rateCache->get();
     }
 
     /**
