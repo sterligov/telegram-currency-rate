@@ -10,8 +10,6 @@ use App\TelegramRequestInterface;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\ServerResponse;
 use PHPUnit\Framework\TestCase;
-use Psr\Cache\CacheItemInterface;
-use Psr\Cache\CacheItemPoolInterface;
 
 class CurrencyCommandTest extends TestCase
 {
@@ -58,8 +56,7 @@ class CurrencyCommandTest extends TestCase
 
         $command = new CurrencyCommand(
             $this->requestMock(),
-            $this->converterMock($rate),
-            $this->cacheMock($rate, false)
+            $this->converterMock($rate)
         );
 
         $message = $this->messageMock($from, $to, $chatID);
@@ -82,8 +79,7 @@ class CurrencyCommandTest extends TestCase
 
         $command = new CurrencyCommand(
             $this->requestMock(),
-            $this->converterMock($rate),
-            $this->cacheMock($rate, true)
+            $this->converterMock($rate)
         );
 
         $message = $this->messageMock($from, $to, $chatID);
@@ -109,21 +105,6 @@ class CurrencyCommandTest extends TestCase
             ->willReturn("$from $to");
 
         return $message;
-    }
-
-    private function cacheMock($rate, $isHit)
-    {
-        $cacheItem = $this->createMock(CacheItemInterface::class);
-        $cacheItem->method('isHit')
-            ->willReturn($isHit);
-        $cacheItem->method('get')
-            ->willReturn($rate);
-
-        $cache = $this->createMock(CacheItemPoolInterface::class);
-        $cache->method('getItem')
-            ->willReturn($cacheItem);
-
-        return $cache;
     }
 
     private function converterMock($rate)

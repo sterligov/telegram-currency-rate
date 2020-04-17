@@ -7,7 +7,7 @@ namespace App\Currency;
 use Longman\TelegramBot\TelegramLog;
 use Psr\Cache\CacheItemPoolInterface;
 
-class CachingCurrencyConverter implements ConverterInterface
+class CachingConverter implements ConverterInterface
 {
     /**
      * @var ConverterInterface
@@ -20,7 +20,7 @@ class CachingCurrencyConverter implements ConverterInterface
     private CacheItemPoolInterface $cache;
 
     /**
-     * CachingCurrencyConverter constructor.
+     * CachingConverter constructor.
      * @param ConverterInterface $converter
      * @param CacheItemPoolInterface $cache
      */

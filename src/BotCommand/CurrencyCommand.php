@@ -26,11 +26,6 @@ class CurrencyCommand implements CommandInterface
     private TelegramRequestInterface $request;
 
     /**
-     * @var CacheItemPoolInterface
-     */
-    private CacheItemPoolInterface $cache;
-
-    /**
      * GenericMessage constructor.
      * @param TelegramRequestInterface $request
      * @param ConverterInterface $converter
@@ -38,12 +33,10 @@ class CurrencyCommand implements CommandInterface
      */
     public function __construct(
         TelegramRequestInterface $request,
-        ConverterInterface $converter,
-        CacheItemPoolInterface $cache
+        ConverterInterface $converter
     ) {
         $this->request = $request;
         $this->converter = $converter;
-        $this->cache = $cache;
     }
 
     /**
