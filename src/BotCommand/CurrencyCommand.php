@@ -8,6 +8,7 @@ use App\Currency\ConverterInterface;
 use App\Currency\Currency;
 use App\Exception\CurrencyCommandException;
 use App\TelegramRequestInterface;
+use App\UI\ChartInlineKeyboard;
 use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\TelegramLog;
 use \Longman\TelegramBot\Entities\ServerResponse;
@@ -54,7 +55,8 @@ class CurrencyCommand implements CommandInterface
             $rate = $this->converter->convert($fromCurrency, $toCurrency);
 
             if ($rate) {
-                $replyMarkup = $this->getInlineKeyboard($message->getChat()->getId(), $fromCurrency, $toCurrency);
+                $keyboard = new ChartInlineKeyboard($message->getChat()->getId(), $fromCurrency, $toCurrency);
+                $replyMarkup = $keyboard->build();
                 $text = round($rate, 2);
             }
 
@@ -99,45 +101,5 @@ class CurrencyCommand implements CommandInterface
         }
 
         return [new Currency($currency[0]), new Currency($currency[1])];
-    }
-
-    /**
-     * @param $chatID
-     * @param Currency $from
-     * @param Currency $to
-     * @return array
-     * @throws \Exception
-     */
-    private function getInlineKeyboard($chatID, Currency $from, Currency $to)
-    {
-        $fromCode = $from->convertCode(Currency::ALPHA);
-        $toCode = $to->convertCode(Currency::ALPHA);
-
-        $callbackData = [
-            'currencyChart',
-            $fromCode,
-            $toCode,
-            (new \DateTime())->modify('-1 month')->format('Y-m-d'),
-            (new \DateTime())->format('Y-m-d'),
-            $chatID
-        ];
-
-        $data[0] = implode(' ', $callbackData);
-        $callbackData[3] = (new \DateTime())->modify('-6 month')->format('Y-m-d');
-        $data[1] = implode(' ', $callbackData);
-        $callbackData[3] = (new \DateTime())->modify('-1 year')->format('Y-m-d');
-        $data[2] = implode(' ', $callbackData);
-
-        return [
-            'inline_keyboard' => [
-                [
-                    ['text' => '1 month chart', 'callback_data' => $data[0]],
-                    ['text' => '6 month chart', 'callback_data' => $data[1]],
-                    ['text' => '1 year chart', 'callback_data' => $data[2]],
-                ],
-            ],
-            'resize_keyboard' => true,
-            'one_time_keyboard' => true
-        ];
     }
 }
