@@ -3,7 +3,6 @@
 
 namespace App\Tests;
 
-
 use App\Chart\InkscapeConverter;
 use App\Exception\SvgConverterException;
 use PHPUnit\Framework\TestCase;

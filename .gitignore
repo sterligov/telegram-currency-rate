@@ -4,3 +4,4 @@ vendor/
 .env
 .docker/nginx/log
 .phpunit.result.cache
+.php_cs.cache

@@ -3,7 +3,6 @@
 
 namespace App;
 
-
 use App\Exception\UnregisteredContainerException;
 use Psr\Container\ContainerInterface;
 

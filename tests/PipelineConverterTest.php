@@ -3,7 +3,6 @@
 
 namespace App\Tests;
 
-
 use App\Currency\Currency;
 use App\Currency\PipelineConverter;
 use App\Currency\ConverterInterface;
@@ -45,6 +44,5 @@ class PipelineConverterTest extends TestCase
 
         $this->expectException(CurrencyConverterException::class);
         $pipeline->convert(new Currency(978), new Currency(643));
-
     }
 }

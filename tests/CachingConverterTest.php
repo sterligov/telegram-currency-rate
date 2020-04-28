@@ -3,7 +3,6 @@
 
 namespace App\Tests;
 
-
 use App\Currency\CachingConverter;
 use App\Currency\Currency;
 use App\Currency\RussianCentralBank;

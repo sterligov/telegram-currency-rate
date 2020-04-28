@@ -2,7 +2,6 @@
 
 namespace App\Tests;
 
-
 use App\Currency\Currency;
 use App\Exception\CurrencyCommandException;
 use App\Exception\CurrencyConverterException;

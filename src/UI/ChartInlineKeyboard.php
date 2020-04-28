@@ -3,7 +3,6 @@
 
 namespace App\UI;
 
-
 use App\Currency\Currency;
 
 class ChartInlineKeyboard implements InlineKeyboardInterface

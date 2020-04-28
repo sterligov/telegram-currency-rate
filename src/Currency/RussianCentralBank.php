@@ -8,7 +8,6 @@
 
 namespace App\Currency;
 
-
 use DateTime;
 
 class RussianCentralBank extends AbstractConverter implements PeriodCurrencyRateInterface

@@ -3,7 +3,6 @@
 
 namespace App;
 
-
 use Longman\TelegramBot\Entities\ServerResponse;
 
 interface TelegramRequestInterface

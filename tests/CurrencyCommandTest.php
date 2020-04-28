@@ -3,7 +3,6 @@
 
 namespace App\Tests;
 
-
 use App\BotCommand\CurrencyCommand;
 use App\Currency\ConverterInterface;
 use App\TelegramRequestInterface;

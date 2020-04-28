@@ -3,7 +3,6 @@
 
 namespace App;
 
-
 use \Longman\TelegramBot\Request;
 use Longman\TelegramBot\Entities\ServerResponse;
 

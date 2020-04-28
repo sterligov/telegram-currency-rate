@@ -3,7 +3,6 @@
 
 namespace App\UI;
 
-
 interface InlineKeyboardInterface
 {
     /**

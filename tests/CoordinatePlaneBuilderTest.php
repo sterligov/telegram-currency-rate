@@ -3,7 +3,6 @@
 
 namespace App\Tests;
 
-
 use App\Chart\CoordinatePlane;
 use App\Exception\CoordinatePlaneException;
 use PHPUnit\Framework\TestCase;

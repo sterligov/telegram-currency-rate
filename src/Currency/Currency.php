@@ -3,7 +3,6 @@
 
 namespace App\Currency;
 
-
 use App\Exception\CurrencyConverterException;
 
 class Currency

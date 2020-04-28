@@ -3,7 +3,6 @@
 
 namespace App\Chart;
 
-
 use \SVG\SVG;
 use \SVG\Nodes\Shapes\SVGPolyline;
 

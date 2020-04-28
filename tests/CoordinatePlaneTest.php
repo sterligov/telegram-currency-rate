@@ -3,7 +3,6 @@
 
 namespace App\Tests;
 
-
 use App\Chart\CoordinatePlane;
 use PHPUnit\Framework\TestCase;
 use SVG\SVG;

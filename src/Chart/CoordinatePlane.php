@@ -3,7 +3,6 @@
 
 namespace App\Chart;
 
-
 use SVG\Nodes\Shapes\SVGLine;
 use SVG\Nodes\Structures\SVGDocumentFragment;
 use SVG\Nodes\Texts\SVGText;

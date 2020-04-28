@@ -8,7 +8,6 @@
 
 namespace App\Currency;
 
-
 class EuropeanCentralBank extends AbstractConverter
 {
     const BASE_CURRENCY = 'EUR';

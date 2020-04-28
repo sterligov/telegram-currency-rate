@@ -3,7 +3,6 @@
 
 namespace App\Currency;
 
-
 use GuzzleHttp\Client;
 
 abstract class AbstractConverter implements ConverterInterface

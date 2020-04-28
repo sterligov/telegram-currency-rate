@@ -3,7 +3,6 @@
 
 namespace App\BotCommand;
 
-
 use App\Currency\ConverterInterface;
 use App\Currency\Currency;
 use App\Exception\CurrencyCommandException;
@@ -90,7 +89,7 @@ class CurrencyCommand implements CommandInterface
             if (count($currency) === 1) {
                 $currency = [];
                 $currency[] = mb_substr($jsonText, 0, mb_strlen($jsonText) / 2);
-                $currency[] = mb_substr($jsonText,  mb_strlen($jsonText) / 2);
+                $currency[] = mb_substr($jsonText, mb_strlen($jsonText) / 2);
             }
         } else {
             $currency = explode(' ', $message, 2);

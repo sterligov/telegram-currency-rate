@@ -3,7 +3,6 @@
 
 namespace App\Currency;
 
-
 interface PeriodCurrencyRateInterface
 {
     /**

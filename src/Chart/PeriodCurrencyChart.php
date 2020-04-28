@@ -3,7 +3,6 @@
 
 namespace App\Chart;
 
-
 use App\Currency\Currency;
 use App\Currency\PeriodCurrencyRateInterface;
 

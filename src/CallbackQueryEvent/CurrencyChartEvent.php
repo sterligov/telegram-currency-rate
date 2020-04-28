@@ -3,7 +3,6 @@
 
 namespace App\CallbackQueryEvent;
 
-
 use App\Chart\PeriodCurrencyChart;
 use App\Chart\SvgConverterInterface;
 use App\Currency\Currency;

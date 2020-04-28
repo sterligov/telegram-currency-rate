@@ -2,7 +2,6 @@
 
 namespace App\Chart;
 
-
 interface SvgConverterInterface
 {
     /**

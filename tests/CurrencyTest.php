@@ -3,7 +3,6 @@
 
 namespace App\Tests;
 
-
 use App\Currency\Currency;
 use App\Exception\CurrencyConverterException;
 use PHPUnit\Framework\TestCase;

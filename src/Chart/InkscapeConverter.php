@@ -2,7 +2,6 @@
 
 namespace App\Chart;
 
-
 use App\Exception\SvgConverterException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Exception\ProcessFailedException;

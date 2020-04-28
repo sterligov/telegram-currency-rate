@@ -3,7 +3,6 @@
 
 namespace App\Chart;
 
-
 use App\Exception\CoordinatePlaneException;
 use SVG\Nodes\Structures\SVGDocumentFragment;
 

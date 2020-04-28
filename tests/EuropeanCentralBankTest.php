@@ -8,7 +8,6 @@
 
 namespace App\Tests;
 
-
 class EuropeanCentralBankTest extends RussianCentralBankTest
 {
     const XML_TEST_DATA = 'european_bank.xml';

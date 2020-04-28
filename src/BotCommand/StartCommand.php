@@ -9,11 +9,9 @@
 
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
-
 use App\Currency\Currency;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Request;
-
 
 class StartCommand extends SystemCommand
 {
