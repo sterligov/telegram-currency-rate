@@ -21,8 +21,7 @@ use \App\Currency\CachingConverter;
 use \App\Currency\PipelineConverter;
 
 return [
-    'debugErrorBotLogger' => function(ContainerInterface $c) {
-
+    'debugErrorBotLogger' => function (ContainerInterface $c) {
         $debugHandler = new StreamHandler($c->get('log.debug'), Logger::DEBUG);
         $debugHandler->setFormatter(new LineFormatter(null, null, true));
 
@@ -32,14 +31,14 @@ return [
         return new Logger('telegram_bot', [$debugHandler, $errorHandler]);
     },
 
-    'updateBotLogger' => function(ContainerInterface $c) {
+    'updateBotLogger' => function (ContainerInterface $c) {
         $updateHandler = new StreamHandler($c->get('log.update'), Logger::INFO);
         $updateHandler->setFormatter(new LineFormatter('%message%' . PHP_EOL));
 
         return new Logger('telegram_bot_updates', [$updateHandler]);
     },
 
-    CacheItemPoolInterface::class => function(ContainerInterface $c) {
+    CacheItemPoolInterface::class => function (ContainerInterface $c) {
         $host = $_ENV['REDIS_HOST'];
         $port = $_ENV['REDIS_PORT'];
         $client = RedisAdapter::createConnection("redis://$host:$port");
@@ -75,4 +74,3 @@ return [
         ->constructor(\Di\env('TG_TOKEN'), $_ENV['TG_BOT_NAME'])
         ->method('addCommandsPaths', \Di\get('bot.commands')),
 ];
-
